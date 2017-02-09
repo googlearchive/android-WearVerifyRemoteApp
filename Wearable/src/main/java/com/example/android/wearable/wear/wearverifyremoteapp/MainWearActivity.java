@@ -72,11 +72,14 @@ public class MainWearActivity extends WearableActivity implements
     // IMPORTANT NOTE: This should be named differently than your Wear app's capability.
     private static final String CAPABILITY_PHONE_APP = "verify_remote_example_phone_app";
 
-
-    // Links to mobile app for Android (Play Store).
+    // Links to install mobile app for both Android (Play Store) and iOS.
     // TODO: Replace with your links/packages.
     private static final String PLAY_STORE_APP_URI =
             "market://details?id=com.example.android.wearable.wear.wearverifyremoteapp";
+
+    // TODO: Replace with your links/packages.
+    private static final String APP_STORE_APP_URI =
+            "https://itunes.apple.com/us/app/android-wear/id986496028?mt=8";
 
     // Result from sending RemoteIntent to phone to open app in play/app store.
     private final ResultReceiver mResultReceiver = new ResultReceiver(new Handler()) {
@@ -263,6 +266,17 @@ public class MainWearActivity extends WearableActivity implements
             // Assume iPhone (iOS device) or Android without Play Store (not supported right now).
             case PlayStoreAvailability.PLAY_STORE_ON_PHONE_UNAVAILABLE:
                 Log.d(TAG, "\tPLAY_STORE_ON_PHONE_UNAVAILABLE");
+
+                // Create Remote Intent to open App Store listing of app on iPhone.
+                Intent intentIOS =
+                        new Intent(Intent.ACTION_VIEW)
+                                .addCategory(Intent.CATEGORY_BROWSABLE)
+                                .setData(Uri.parse(APP_STORE_APP_URI));
+
+                RemoteIntent.startRemoteActivity(
+                        getApplicationContext(),
+                        intentIOS,
+                        mResultReceiver);
                 break;
 
             case PlayStoreAvailability.PLAY_STORE_ON_PHONE_ERROR_UNKNOWN:

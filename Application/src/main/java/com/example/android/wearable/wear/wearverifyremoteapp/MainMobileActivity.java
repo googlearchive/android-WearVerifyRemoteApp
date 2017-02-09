@@ -99,15 +99,16 @@ public class MainMobileActivity extends AppCompatActivity implements
             if (resultCode == RemoteIntent.RESULT_OK) {
                 Toast toast = Toast.makeText(
                         getApplicationContext(),
-                        "Successfully sent to device",
+                        "Play Store Request to Wear device successful.",
                         Toast.LENGTH_SHORT);
                 toast.show();
 
             } else if (resultCode == RemoteIntent.RESULT_FAILED) {
                 Toast toast = Toast.makeText(
                         getApplicationContext(),
-                        "Failed to send to device.",
-                        Toast.LENGTH_SHORT);
+                        "Play Store Request Failed. Wear device(s) may not support Play Store, "
+                                + " that is, the Wear device may be version 1.0.",
+                        Toast.LENGTH_LONG);
                 toast.show();
 
             } else {
@@ -188,7 +189,7 @@ public class MainMobileActivity extends AppCompatActivity implements
         // Initial request for devices with our capability, aka, our Wear app installed.
         findWearDevicesWithApp();
 
-        // Initial request for devices all Wear devices connected (with or without our capability).
+        // Initial request for all Wear devices connected (with or without our capability).
         // Additional Note: Because there isn't a listener for ALL Nodes added/removed from network
         // that isn't deprecated, we simply update the full list when the Google API Client is
         // connected and when capability changes come through in the onCapabilityChanged() method.
