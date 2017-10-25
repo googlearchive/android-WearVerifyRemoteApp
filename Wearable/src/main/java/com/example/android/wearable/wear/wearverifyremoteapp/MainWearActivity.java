@@ -15,6 +15,7 @@
  */
 package com.example.android.wearable.wear.wearverifyremoteapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,7 +23,7 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.wearable.activity.WearableActivity;
+import android.support.wear.ambient.AmbientMode;
 import android.support.wearable.view.ConfirmationOverlay;
 import android.util.Log;
 import android.view.View;
@@ -46,7 +47,8 @@ import java.util.Set;
  * Checks if the phone app is installed on remote device. If it is not, allows user to open app
  * listing on the phone's Play or App Store.
  */
-public class MainWearActivity extends WearableActivity implements
+public class MainWearActivity extends Activity implements
+        AmbientMode.AmbientCallbackProvider,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         CapabilityApi.CapabilityListener {
@@ -113,7 +115,9 @@ public class MainWearActivity extends WearableActivity implements
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        setAmbientEnabled();
+
+        // Enables Ambient mode.
+        AmbientMode.attachAmbientSupport(this);
 
         mInformationTextView = (TextView) findViewById(R.id.information_text_view);
         mRemoteOpenButton = (Button) findViewById(R.id.remote_open_button);
@@ -298,5 +302,30 @@ public class MainWearActivity extends WearableActivity implements
             bestNodeId = node;
         }
         return bestNodeId;
+    }
+
+    @Override
+    public AmbientMode.AmbientCallback getAmbientCallback() {
+        return new MyAmbientCallback();
+    }
+
+    private class MyAmbientCallback extends AmbientMode.AmbientCallback {
+        /** Prepares the UI for ambient mode. */
+        @Override
+        public void onEnterAmbient(Bundle ambientDetails) {
+            super.onEnterAmbient(ambientDetails);
+
+            Log.d(TAG, "onEnterAmbient() " + ambientDetails);
+            // In our case, the assets are already in black and white, so we don't update UI.
+        }
+
+        /** Restores the UI to active (non-ambient) mode. */
+        @Override
+        public void onExitAmbient() {
+            super.onExitAmbient();
+
+            Log.d(TAG, "onExitAmbient()");
+            // In our case, the assets are already in black and white, so we don't update UI.
+        }
     }
 }
