@@ -24,6 +24,7 @@ import android.os.ResultReceiver;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.wear.ambient.AmbientMode;
+import android.support.wearable.phone.PhoneDeviceType;
 import android.support.wearable.view.ConfirmationOverlay;
 import android.util.Log;
 import android.view.View;
@@ -39,7 +40,6 @@ import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.wearable.intent.RemoteIntent;
-import com.google.android.wearable.playstore.PlayStoreAvailability;
 
 import java.util.Set;
 
@@ -76,7 +76,7 @@ public class MainWearActivity extends Activity implements
 
     // Links to install mobile app for both Android (Play Store) and iOS.
     // TODO: Replace with your links/packages.
-    private static final String PLAY_STORE_APP_URI =
+    private static final String ANDROID_MARKET_APP_URI =
             "market://details?id=com.example.android.wearable.wear.wearverifyremoteapp";
 
     // TODO: Replace with your links/packages.
@@ -246,20 +246,16 @@ public class MainWearActivity extends Activity implements
     private void openAppInStoreOnPhone() {
         Log.d(TAG, "openAppInStoreOnPhone()");
 
-        int playStoreAvailabilityOnPhone =
-                PlayStoreAvailability.getPlayStoreAvailabilityOnPhone(getApplicationContext());
-
-        switch (playStoreAvailabilityOnPhone) {
-
-            // Android phone with the Play Store.
-            case PlayStoreAvailability.PLAY_STORE_ON_PHONE_AVAILABLE:
-                Log.d(TAG, "\tPLAY_STORE_ON_PHONE_AVAILABLE");
-
+        int phoneDeviceType = PhoneDeviceType.getPhoneDeviceType(getApplicationContext());
+        switch (phoneDeviceType) {
+            // Paired to Android phone, use Play Store URI.
+            case PhoneDeviceType.DEVICE_TYPE_ANDROID:
+                Log.d(TAG, "\tDEVICE_TYPE_ANDROID");
                 // Create Remote Intent to open Play Store listing of app on remote device.
                 Intent intentAndroid =
                         new Intent(Intent.ACTION_VIEW)
                                 .addCategory(Intent.CATEGORY_BROWSABLE)
-                                .setData(Uri.parse(PLAY_STORE_APP_URI));
+                                .setData(Uri.parse(ANDROID_MARKET_APP_URI));
 
                 RemoteIntent.startRemoteActivity(
                         getApplicationContext(),
@@ -267,9 +263,9 @@ public class MainWearActivity extends Activity implements
                         mResultReceiver);
                 break;
 
-            // Assume iPhone (iOS device) or Android without Play Store (not supported right now).
-            case PlayStoreAvailability.PLAY_STORE_ON_PHONE_UNAVAILABLE:
-                Log.d(TAG, "\tPLAY_STORE_ON_PHONE_UNAVAILABLE");
+            // Paired to iPhone, use iTunes App Store URI
+            case PhoneDeviceType.DEVICE_TYPE_IOS:
+                Log.d(TAG, "\tDEVICE_TYPE_IOS");
 
                 // Create Remote Intent to open App Store listing of app on iPhone.
                 Intent intentIOS =
@@ -283,8 +279,8 @@ public class MainWearActivity extends Activity implements
                         mResultReceiver);
                 break;
 
-            case PlayStoreAvailability.PLAY_STORE_ON_PHONE_ERROR_UNKNOWN:
-                Log.d(TAG, "\tPLAY_STORE_ON_PHONE_ERROR_UNKNOWN");
+            case PhoneDeviceType.DEVICE_TYPE_ERROR_UNKNOWN:
+                Log.d(TAG, "\tDEVICE_TYPE_ERROR_UNKNOWN");
                 break;
         }
     }
