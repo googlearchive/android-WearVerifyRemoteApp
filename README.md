@@ -3,7 +3,7 @@ Android WearVerifyRemoteApp Sample
 ===================================
 
 Sample demonstrates best practices for checking if connected mobile device has your app installed
-from an Android Wear 2.+ standalone app and the other way around.
+from a Wear 2.+ standalone app and the other way around.
 
 Introduction
 ------------
@@ -31,7 +31,7 @@ Pre-requisites
 --------------
 
 - Android SDK 27
-- Android Build Tools v27.0.2
+- Android Build Tools v27.0.3
 - Android Support Repository
 
 Screenshots
