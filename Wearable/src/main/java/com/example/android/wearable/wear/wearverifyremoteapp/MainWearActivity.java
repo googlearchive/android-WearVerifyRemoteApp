@@ -20,14 +20,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v4.app.FragmentActivity;
-import android.support.wear.ambient.AmbientModeSupport;
 import android.support.wearable.phone.PhoneDeviceType;
 import android.support.wearable.view.ConfirmationOverlay;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.wear.ambient.AmbientModeSupport;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
